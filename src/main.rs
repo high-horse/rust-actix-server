@@ -1,41 +1,27 @@
-use actix_web::{App, HttpServer, HttpResponse, Responder, web, get, post};
+use actix_web::{App, HttpServer, HttpResponse, web, Responder};
 
-#[get("/")]
-pub async fn index() -> impl Responder {
-    HttpResponse::Ok().body("hello world this is index page")
+
+pub struct AppDetail{
+    app_name: String,
 }
 
-#[post("/home")]
-pub async fn home() ->impl Responder {
-    HttpResponse::Ok().body("hello this is home page")
-}
-
-pub async fn page404 () -> impl Responder {
-    HttpResponse::Ok().body("<h1>404 Page not found</h1>")
-}
-
-pub async fn app_home() -> impl Responder {
-    HttpResponse::Ok().body("this is app home page")
-}
-
-pub async fn app_index() ->impl Responder {
-    HttpResponse:: Ok().body("this is app index page")
+pub async fn index(data : web::Data<AppDetail>) -> impl Responder {
+    let response = "the app name is".to_string() +  &data.app_name;
+    // let response = String::from("value");
+    HttpResponse::Ok().body(response)
 }
 
 #[actix_web::main]
 pub async fn main() -> std::io::Result<()> {
     let url = String::from("127.0.0.1:8000");
-    println!("the server is running on {:?} ", url);
+    println!("The Server is running on {:?}", url);
+
     HttpServer::new(|| {
         App::new()
-            .service(
-                web::scope("/app")
-                    .route("/", web::get().to(app_index))
-                    .route("/home", web::get().to(app_home))
-            )  
-            .service(index)
-            .service(home)
-            .route("/404", web::get().to(page404))
+            .app_data(web::Data::new(AppDetail{
+                app_name: "actix web server".to_string(),
+            }))
+            .route("/", web::get().to(index))
     })
     .bind(url)?
     .run()
