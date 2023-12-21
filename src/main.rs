@@ -1,27 +1,51 @@
-use actix_web::{App, HttpServer, HttpResponse, web, Responder};
+use actix_web:: {get, web, HttpResponse, HttpServer, Responder, App};
+use serde::Serialize;
 
+mod api;
+mod models;
+mod repository;
 
-pub struct AppDetail{
-    app_name: String,
+#[derive(Debug, Serialize)]
+pub struct Response {
+    pub status: String,
+    pub message: String,
 }
 
-pub async fn index(data : web::Data<AppDetail>) -> impl Responder {
-    let response = "the app name is".to_string() +  &data.app_name;
-    // let response = String::from("value");
-    HttpResponse::Ok().body(response)
+#[get("/health")]
+async fn healthcheck() -> impl Responder {
+    let response = Response{
+        status: "200".to_string(),
+        message : String::from("Server is running fine"),
+    };
+    HttpResponse::Ok().json(response)
 }
+
+async fn not_found() ->impl Responder {
+    let response = Response {
+        status: "200".to_string(),
+        message: String::from("The requested respurce is not available"),
+    };
+    HttpResponse::Ok().json(response)
+}
+
 
 #[actix_web::main]
 pub async fn main() -> std::io::Result<()> {
-    let url = String::from("127.0.0.1:8000");
-    println!("The Server is running on {:?}", url);
+    let url =  "127.0.0.1:8000".to_string();
+    println!("Server is running on {url}");
 
-    HttpServer::new(|| {
+    let todo_db = repository::database::Database::new();
+    let app_data = web::Data::new(todo_db);
+
+    HttpServer::new( move ||{
         App::new()
-            .app_data(web::Data::new(AppDetail{
-                app_name: "actix web server".to_string(),
-            }))
-            .route("/", web::get().to(index))
+            .app_data(app_data.clone())
+            .configure(api::api::config)
+            .service(healthcheck)
+            .default_service(
+                web::route().to(not_found)
+            )
+            .wrap(actix_web::middleware::Logger::default())
     })
     .bind(url)?
     .run()
