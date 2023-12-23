@@ -22,8 +22,8 @@ async fn healthcheck() -> impl Responder {
 
 async fn not_found() ->impl Responder {
     let response = Response {
-        status: "200".to_string(),
-        message: String::from("The requested respurce is not available"),
+        status: "404".to_string(),
+        message: String::from("The requested resource is not available."),
     };
     HttpResponse::Ok().json(response)
 }
