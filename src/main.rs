@@ -31,7 +31,7 @@ async fn not_found() ->impl Responder {
 
 #[actix_web::main]
 pub async fn main() -> std::io::Result<()> {
-    let url =  "127.0.0.1:8080".to_string();
+    let url =  "127.0.0.1:8000".to_string();
     println!("Server is running on {url}");
 
     let todo_db = repository::database::Database::new();

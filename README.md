@@ -1,5 +1,59 @@
-# rust-actix-server
+# Rust actix server
 
+A brief description of what this project does and who it's for.
 
-# use curl cammand like : curl localhost:8000/health -vvv
-# curl -X POST -H "Content-Type: application/json" -d '{"title" : "Item No 1", "description": "item no 1 description"}' http://localhost:8000/api/create_todo
+## Installation 
+
+Install my-project with npm
+
+```bash 
+  cargo build
+```
+
+## Usage/Examples
+
+```bash
+  cargo run
+```
+
+## API Reference
+
+#### Get all items
+
+```http
+  GET /api/todos
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `api_key` | `string` | **Required**. Your API key |
+
+#### Get item
+
+```http
+  GET /api/items/${id}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id of item to fetch |
+
+#### Add item
+
+```http
+  POST /api/items
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `api_key` | `string` | **Required**. Your API key |
+| `name`    | `string` | **Required**. Item name |
+| `desc`    | `string` | **Required**. Item description |
+
+## Contributing
+
+Contributions are always welcome!
+
+See `contributing.md` for ways to get started.
+
+Please adhere to this project's `code of conduct`.

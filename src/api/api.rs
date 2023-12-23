@@ -5,7 +5,6 @@ use actix_web::{web::{
 
 }, post, get, put, delete, HttpResponse } ;
 
-use crate::models::todo;
 use crate::{models::todo::Todo, repository::database::Database};
 
 #[post("/todos")]
