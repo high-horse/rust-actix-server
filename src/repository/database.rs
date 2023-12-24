@@ -52,7 +52,6 @@ impl  Database {
         let index = todos.iter().position(|todo| todo.id == Some(id.to_string()))?;
         todos[index] = todo.clone();
         Some(todo)
-
     }
 
     pub fn delete_todo_by_id(&self, id: &str) -> Option<Todo> {
